@@ -1,5 +1,5 @@
 import { getForecast } from "./api.js";
-import { toDays, isGoodDay, summarize } from "./logic.js";
+import { toDays, isGoodDay, summarize , reasons} from "./logic.js";
 // main.js — 화면 담당. P1 ~ P5, P7 에서 이어서 채웁니다.
 //
 // 상황: index.html 에 폼과 빈 표가 있고, 이 파일이 <script type="module"> 로 연결되어 있습니다.
@@ -60,9 +60,12 @@ form.addEventListener("submit", async(event) =>{
 });
 
 const state = {city: null, days: [], limits: { rain: Number(rainInput.value), wind: Number(windInput.value) }};
+
 function dayRow(day) {
   const tr= document.createElement("tr");
-  for (const text of[day.date.slice(5), `${day.max}°`, `${day.wind}km/h`, `${day.rain}%`]) {
+  const whyNot = reasons(day, state.limits).join(", ");
+
+  for (const text of[day.date.slice(5), `${day.max}°`, `${day.wind}km/h`, `${day.rain}%`, whyNot]) {
     const td =document.createElement("td");
     td.textContent =text;
     tr.append(td);
